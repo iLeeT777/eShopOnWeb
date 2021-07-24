@@ -1,10 +1,13 @@
-﻿using Microsoft.eShopWeb.ApplicationCore.Interfaces;
+﻿using Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate;
+using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Services;
 using Microsoft.eShopWeb.Infrastructure.Data;
 using Microsoft.eShopWeb.Infrastructure.Logging;
 using Microsoft.eShopWeb.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Net.Http;
 
 namespace Microsoft.eShopWeb.Web.Configuration
 {
@@ -15,6 +18,8 @@ namespace Microsoft.eShopWeb.Web.Configuration
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderItemReserveService, OrderItemReserveService>(sp =>
+                new OrderItemReserveService(new HttpClient(), new Uri(configuration["OrderItemReserveFunctionUrl"]), sp.GetService<IAsyncRepository<Basket>>()));
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddSingleton<IUriComposer>(new UriComposer(configuration.Get<CatalogSettings>()));
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));

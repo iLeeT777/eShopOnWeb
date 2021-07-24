@@ -22,6 +22,7 @@ namespace Microsoft.eShopWeb.Web.Pages.Basket
         private readonly IBasketService _basketService;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IOrderService _orderService;
+        private readonly IOrderItemReserveService _orderItemReserveService;
         private string _username = null;
         private readonly IBasketViewModelService _basketViewModelService;
         private readonly IAppLogger<CheckoutModel> _logger;
@@ -30,11 +31,13 @@ namespace Microsoft.eShopWeb.Web.Pages.Basket
             IBasketViewModelService basketViewModelService,
             SignInManager<ApplicationUser> signInManager,
             IOrderService orderService,
+            IOrderItemReserveService orderItemReserveService,
             IAppLogger<CheckoutModel> logger)
         {
             _basketService = basketService;
             _signInManager = signInManager;
             _orderService = orderService;
+            _orderItemReserveService = orderItemReserveService;
             _basketViewModelService = basketViewModelService;
             _logger = logger;
         }
@@ -60,6 +63,7 @@ namespace Microsoft.eShopWeb.Web.Pages.Basket
                 var updateModel = items.ToDictionary(b => b.Id.ToString(), b => b.Quantity);
                 await _basketService.SetQuantities(BasketModel.Id, updateModel);
                 await _orderService.CreateOrderAsync(BasketModel.Id, new Address("123 Main St.", "Kent", "OH", "United States", "44240"));
+                await _orderItemReserveService.ReserveOrderItemAsync(BasketModel.Id);
                 await _basketService.DeleteBasketAsync(BasketModel.Id);               
             }
             catch (EmptyBasketOnCheckoutException emptyBasketOnCheckoutException)
