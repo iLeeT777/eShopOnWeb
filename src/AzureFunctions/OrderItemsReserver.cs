@@ -40,7 +40,7 @@ namespace OrderItemsReserverFunction
                 await blob.UploadFromStreamAsync(stream);
             }
 
-            return new OkObjectResult("UploadBlobHttpTrigger function executed successfully!!");
+            return new OkObjectResult("OrderItemsReserver function executed successfully!");
         }
 
         private static CloudStorageAccount GetCloudStorageAccount(ExecutionContext executionContext)

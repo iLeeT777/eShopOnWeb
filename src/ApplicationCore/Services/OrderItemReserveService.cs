@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.eShopWeb.ApplicationCore.Services
 {
-    public class OrderItemReserveService : IOrderItemReserveService
+    public sealed class OrderItemReserveService : IOrderItemReserveService
     {
         private readonly HttpClient _httpClient;
         private readonly Uri _functionEndpoint;

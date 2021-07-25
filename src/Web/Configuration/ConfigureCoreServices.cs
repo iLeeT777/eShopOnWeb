@@ -20,6 +20,8 @@ namespace Microsoft.eShopWeb.Web.Configuration
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderItemReserveService, OrderItemReserveService>(sp =>
                 new OrderItemReserveService(new HttpClient(), new Uri(configuration["OrderItemReserveFunctionUrl"]), sp.GetService<IAsyncRepository<Basket>>()));
+            services.AddScoped<IDeliveryOrderService, DeliveryOrderService>(sp =>
+               new DeliveryOrderService(new HttpClient(), new Uri(configuration["DeliveryOrderProcessorFunctionUrl"])));
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddSingleton<IUriComposer>(new UriComposer(configuration.Get<CatalogSettings>()));
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));

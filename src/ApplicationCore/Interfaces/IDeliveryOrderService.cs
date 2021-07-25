@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace Microsoft.eShopWeb.ApplicationCore.Interfaces
 {
-    public interface IOrderService
+    public interface IDeliveryOrderService
     {
-        Task<Order> CreateOrderAsync(int basketId, Address shippingAddress);
+        Task PublishDeliveryOrderAsync(Order order);
     }
 }
