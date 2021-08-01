@@ -1,4 +1,5 @@
-﻿using Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate;
+﻿using Microsoft.Azure.ServiceBus;
+using Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Services;
 using Microsoft.eShopWeb.Infrastructure.Data;
@@ -19,7 +20,9 @@ namespace Microsoft.eShopWeb.Web.Configuration
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderItemReserveService, OrderItemReserveService>(sp =>
-                new OrderItemReserveService(new HttpClient(), new Uri(configuration["OrderItemReserveFunctionUrl"]), sp.GetService<IAsyncRepository<Basket>>()));
+                new OrderItemReserveService(
+                    new QueueClient(configuration["OrderItemReserveServiceBusUrl"], configuration["OrderItemQueueName"]), 
+                    sp.GetService<IAsyncRepository<Basket>>()));
             services.AddScoped<IDeliveryOrderService, DeliveryOrderService>(sp =>
                new DeliveryOrderService(new HttpClient(), new Uri(configuration["DeliveryOrderProcessorFunctionUrl"])));
             services.AddScoped<IOrderRepository, OrderRepository>();
